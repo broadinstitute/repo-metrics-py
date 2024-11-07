@@ -39,7 +39,7 @@ This find/replace will be needed until github [implements template repo variable
 However, fear not!  I have provided `initialize.sh` for this very purpose.  Run it with the following parameters after creating your repo to initialize your specific repository info:
 
 ```
-./initialize.sh PROJECT_NAME "SHORT PROJECT DESCRIPTION" "AUTHOR NAME" AUTHOR_EMAIL
+./initialize.sh repo_metrics "SHORT PROJECT DESCRIPTION" "AUTHOR NAME" AUTHOR_EMAIL
 ```
 I quoted the fields that are likely to contain spaces - this will be necessary.
 

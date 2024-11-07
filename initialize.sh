@@ -21,7 +21,7 @@ shopt -s expand_aliases
 
 function simpleUsage()
 {
-  echo -e "Usage: $SCRIPTNAME PROJECT_NAME \"SHORT PROJECT DESCRIPTION\" \"AUTHOR NAME\" AUTHOR_EMAIL"
+  echo -e "Usage: $SCRIPTNAME repo_metrics \"SHORT PROJECT DESCRIPTION\" \"AUTHOR NAME\" AUTHOR_EMAIL"
   echo -e "Initialize template project variables with project-specific values."
 }
 
@@ -211,7 +211,7 @@ if ${ISCALLEDBYUSER} ; then
 	# Replace trivial fields first.  They should only be in the setup.py:
 	tmp_setup=$( makeTemp )
 	sed \
-		-e "s#PROJECT_NAME#${proj_name}#g" \
+		-e "s#repo_metrics#${proj_name}#g" \
 		-e "s#_SHORT_PROJECT_DESCRIPTION_#${proj_desc}#g" \
 		-e "s#_AUTHOR_EMAIL_#${author_email}#g" \
 		-e "s#_AUTHOR_#${author_name}#g" ${SCRIPTDIR}/setup.py > $tmp_setup
@@ -227,23 +227,23 @@ if ${ISCALLEDBYUSER} ; then
 	# Replace project name in tox.ini:
 	tmp_tox=$( makeTemp )
 	sed \
-		-e "s@PROJECT_NAME@${proj_name}@" ${SCRIPTDIR}/tox.ini > $tmp_tox
+		-e "s@repo_metrics@${proj_name}@" ${SCRIPTDIR}/tox.ini > $tmp_tox
 	mv $tmp_tox ${SCRIPTDIR}/tox.ini
 
 	# Rename the project name in the logger:
 	tmp_log=$( makeTemp )
 	sed \
-		-e "s@PROJECT_NAME@${proj_name}@" ${SCRIPTDIR}/src/PROJECT_NAME/log.py > $tmp_log
-	mv $tmp_log ${SCRIPTDIR}/src/PROJECT_NAME/log.py
+		-e "s@repo_metrics@${proj_name}@" ${SCRIPTDIR}/src/repo_metrics/log.py > $tmp_log
+	mv $tmp_log ${SCRIPTDIR}/src/repo_metrics/log.py
 	
 	# Rename the project name in the main executable:
 	tmp_main=$( makeTemp )
 	sed \
-		-e "s@PROJECT_NAME@${proj_name}@" ${SCRIPTDIR}/src/PROJECT_NAME/__main__.py > $tmp_main
-	mv $tmp_main ${SCRIPTDIR}/src/PROJECT_NAME/__main__.py
+		-e "s@repo_metrics@${proj_name}@" ${SCRIPTDIR}/src/repo_metrics/__main__.py > $tmp_main
+	mv $tmp_main ${SCRIPTDIR}/src/repo_metrics/__main__.py
 
 	# Rename the folder containing the code:
-	git mv ${SCRIPTDIR}/src/PROJECT_NAME "${SCRIPTDIR}/src/${proj_name}"
+	git mv ${SCRIPTDIR}/src/repo_metrics "${SCRIPTDIR}/src/${proj_name}"
 
 	# We're done here:
 	echo "Done."
