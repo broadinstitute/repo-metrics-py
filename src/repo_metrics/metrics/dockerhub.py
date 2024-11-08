@@ -13,6 +13,6 @@ class DockerHubMetricsHelper:
 
         :return: A dictionary containing the repository info
         """
-        url = f'https://hub.docker.com/v2/repositories/{org}/{repo}'
-        response = requests.get(url, headers=headers)
+        url = f'https://hub.docker.com/v2/repositories/{owner}/{repo}'
+        response = requests.get(url)
         return response.json()

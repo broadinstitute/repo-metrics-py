@@ -6,7 +6,8 @@ class OutputType(str, Enum):
     """
     Enum for the output types
     """
-    JSON = "json"
+    JSON = "json",
+    CSV = "csv"
 
 
 class Output(ABC):
