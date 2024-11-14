@@ -1,8 +1,6 @@
+import json
 from typing import List
 
-import json
-
-from .output_type import OutputType
 
 class OutputConfig:
     """
@@ -27,21 +25,21 @@ class OutputConfig:
     def __init__(self, github_fields: List[str] | None = None, dockerhub_fields: List[str] | None = None):
         self.github_fields = github_fields
         self.dockerhub_fields = dockerhub_fields
-    
+
     @staticmethod
     def just_metrics():
         return OutputConfig(
             github_fields=OutputConfig.just_metrics_config["github_fields"],
             dockerhub_fields=OutputConfig.just_metrics_config["dockerhub_fields"],
         )
-    
+
     @staticmethod
     def everything():
         return OutputConfig(
             github_fields=None,
             dockerhub_fields=None,
         )
-    
+
     @staticmethod
     def load_from_json_file(path: str):
         """
@@ -50,7 +48,7 @@ class OutputConfig:
         :param path: The path to the json file
         :return: The configuration
         """
-        with open(path, 'r') as f:
+        with open(path, "r") as f:
             data = json.load(f)
             return OutputConfig(
                 github_fields=data.get("github_fields", None),

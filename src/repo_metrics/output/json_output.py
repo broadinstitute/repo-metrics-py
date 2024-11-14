@@ -2,6 +2,7 @@ import json
 
 from .output_type import Output
 
+
 class JsonOutput(Output):
 
     def __init__(self, path):
@@ -13,5 +14,5 @@ class JsonOutput(Output):
 
         :param data: The data to print
         """
-        with open(self.path, 'w') as f:
+        with open(self.path, "w") as f:
             json.dump(data, f, indent=4)

@@ -3,9 +3,10 @@ import csv
 from .output_type import Output
 from .preprocess import flatten
 
+
 class CsvOutput(Output):
 
-    def __init__(self, path, append = False):
+    def __init__(self, path, append=False):
         """
         Constructor for the CsvOutput class
 
@@ -21,7 +22,7 @@ class CsvOutput(Output):
 
         :param data: The data to print
         """
-        open_mode = 'a' if self.append else 'w'
+        open_mode = "a" if self.append else "w"
 
         # Flatten the data so it writes correctly
         data = flatten(data)

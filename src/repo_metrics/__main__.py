@@ -41,7 +41,7 @@ def main_entry(verbosity):
     from . import log  # pylint: disable=C0415
 
     log.configure_logging(verbosity)
-    
+
     load_dotenv()
 
     # Log our command-line and log level so we can have it in the log file:

@@ -1,5 +1,6 @@
 import requests
 
+
 class DockerHubMetricsHelper:
     def __init__(self):
         pass
@@ -13,6 +14,6 @@ class DockerHubMetricsHelper:
 
         :return: A dictionary containing the repository info
         """
-        url = f'https://hub.docker.com/v2/repositories/{owner}/{repo}'
+        url = f"https://hub.docker.com/v2/repositories/{owner}/{repo}"
         response = requests.get(url)
         return response.json()

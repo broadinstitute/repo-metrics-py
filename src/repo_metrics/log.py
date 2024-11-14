@@ -26,9 +26,7 @@ def get_logging_format_string(package):
     """
     module_names = get_dot_separated_submodule_names(package)
     max_module_name_length = max(len(name) for name in module_names)
-    format_string = (
-        f"%(asctime)s %(name)-{max_module_name_length}s %(levelname)-8s %(message)s"
-    )
+    format_string = f"%(asctime)s %(name)-{max_module_name_length}s %(levelname)-8s %(message)s"
     return format_string
 
 
@@ -51,8 +49,6 @@ def get_package_paths(paths):
     child_packages = pkgutil.walk_packages(paths)
     for child in child_packages:
         if child.ispkg:
-            yield from get_package_paths(
-                [str(Path(child.module_finder.path) / child.name)]
-            )
+            yield from get_package_paths([str(Path(child.module_finder.path) / child.name)])
         else:
             yield child

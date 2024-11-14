@@ -1,12 +1,17 @@
 import logging
+
 import requests
 
 from ..settings import Settings
 
+
 class GitHubException(Exception):
     pass
 
+
 LOGGER = logging.getLogger(__name__)
+
+
 class GitHubMetricsHelper:
     """
     A helper class for getting metrics from the GitHub API
@@ -26,9 +31,9 @@ class GitHubMetricsHelper:
 
         :return: A dictionary containing the repository info
         """
-        url = f'https://api.github.com/repos/{owner}/{repo}'
+        url = f"https://api.github.com/repos/{owner}/{repo}"
         if self.token:
-            headers = {'Authorization':f'token {self.token}'}
+            headers = {"Authorization": f"token {self.token}"}
         else:
             headers = {}
         response = requests.get(url, headers=headers)
@@ -38,10 +43,10 @@ class GitHubMetricsHelper:
 
         # Get the download count for the repository
         download_count = self.__get_download_count(owner, repo)
-        data['download_count'] = download_count
+        data["download_count"] = download_count
 
         return data
-    
+
     def __get_download_count(self, owner: str, repo: str) -> int:
         """
         Get the download count for the specified git repository
@@ -51,9 +56,9 @@ class GitHubMetricsHelper:
 
         :return: The download count
         """
-        url = f'https://api.github.com/repos/{owner}/{repo}/releases'
+        url = f"https://api.github.com/repos/{owner}/{repo}/releases"
         if self.token:
-            headers = {'Authorization':f'token {self.token}'}
+            headers = {"Authorization": f"token {self.token}"}
         else:
             headers = {}
 
@@ -62,7 +67,7 @@ class GitHubMetricsHelper:
         download_count = 0
         while True:
             # Set the per_page parameter to 100 to get the maximum number of releases per page
-            params = {'page': page, 'per_page': 100}
+            params = {"page": page, "per_page": 100}
             response = requests.get(url, headers=headers, params=params)
             if response.status_code != 200:
                 raise GitHubException(f"Failed to get info for {owner}/{repo}")
@@ -71,13 +76,11 @@ class GitHubMetricsHelper:
             # If there are no more releases, break out of the loop
             if not releases:
                 break
-            
+
             for release in releases:
-                for asset in release['assets']:
-                    download_count += asset['download_count']
-            
+                for asset in release["assets"]:
+                    download_count += asset["download_count"]
 
             page += 1
-        
-        return download_count
 
+        return download_count

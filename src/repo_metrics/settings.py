@@ -1,18 +1,21 @@
 """
 Defines and sets the settings that may need to be retrieved from the environment or w/e.
 """
+
 import os
+
 
 class Settings:
     """
     A class to store settings for the application
     """
+
     def __init__(self):
         """
         Initialize the settings
         """
         # Get the GitHub API token from the environment variable
-        self.github_token: str | None = os.getenv('GITHUB_TOKEN')
+        self.github_token: str | None = os.getenv("GITHUB_TOKEN")
 
     def get_github_token(self) -> str:
         """

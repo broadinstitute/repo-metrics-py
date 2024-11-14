@@ -1,10 +1,10 @@
-from datetime import datetime
 import logging
+from datetime import datetime
 
 import click
 
 from repo_metrics.metrics import DockerHubMetricsHelper, GitHubMetricsHelper
-from repo_metrics.output import OutputConfig, Output, OutputType, CsvOutput, JsonOutput, preprocess
+from repo_metrics.output import CsvOutput, JsonOutput, Output, OutputConfig, OutputType, preprocess
 
 LOGGER = logging.getLogger(__name__)
 
@@ -95,7 +95,6 @@ def main(github_repo, dockerhub_repo, output, output_format, append, include_tim
             dockerhub_data = preprocess.filter(dockerhub_data, config.dockerhub_fields)
         data_to_print.append(dockerhub_data)
         data_to_print_labels.append("dockerhub")
-    
 
     repo_info = preprocess.merge(data_to_print, data_to_print_labels)
 

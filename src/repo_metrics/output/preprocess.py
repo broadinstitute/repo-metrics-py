@@ -5,6 +5,7 @@ output classes
 
 from typing import List
 
+
 def filter(data: dict, fields: List[str] | None) -> dict:
     """
     Filter the data dictionary to only include the fields specified in the fields list
@@ -17,6 +18,7 @@ def filter(data: dict, fields: List[str] | None) -> dict:
     if not fields:
         return data
     return {field: data[field] for field in fields if field in data}
+
 
 def merge(data: List[dict], labels: List[str] | None) -> dict:
     """
@@ -35,6 +37,7 @@ def merge(data: List[dict], labels: List[str] | None) -> dict:
             else:
                 merged_data[key] = value
     return merged_data
+
 
 def flatten(data: dict, prefix: str = "") -> dict:
     """
