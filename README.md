@@ -1,80 +1,70 @@
-# Python CLI Project Template
-This template was created so that a new python3 CLI program could be quickly whipped up with a nice infrastructure. 
-
-## Acknowledgements
-This template is based on several projects that originated at or as part of collaborations involving The Broad Institute of MIT and Harvard.
-In particular, the following people were instrumental in those projects: 
-
-- Kiran Garimella (@kvg)
-- Winni Kretzschmar (@winni2k)
-- Karl Johan Westrin (@karljohanw)
-
-## Contents / Features
-Included in this template are the following features:
-- `click` for argument parsing with examples
-- an over-engineered logging module (ensures that all log messages have correct leading whitespace to be column-aligned)
-- `tox` setup (linting, black for code formatting, testing)
-- examples of tests (already connected to tox for quick starting)
-- `.gitignore` for most kinds of local files
-- include sort ordering defaults 
-- a `readthedocs` template
-- a `bumpversion` config file
-- a `pylint` config file
-
-If you check this out and run `tox` the tests will all pass.
-
-## Make It Your Own
-### Required Changes
-To make this project-specific, several placeholder values need to be replaced with your content.  
-
-| FIELD | DESCRIPTION |
-| ----- | ----------- |
-|  PROJECT\_NAME | The name of your new project / tool. |
-| \_SHORT\_PROJECT\_DESCRIPTION\_ | A concise description of your new project / tool. |
-| \_AUTHOR\_ | The name of the primary author / point of contact. |
-| \_AUTHOR\_EMAIL\_ | The email address of the primary author / point of contact. |
-
-This find/replace will be needed until github [implements template repo variables.](https://github.com/isaacs/github/issues/1716)
-
-However, fear not!  I have provided `initialize.sh` for this very purpose.  Run it with the following parameters after creating your repo to initialize your specific repository info:
-
-```
-./initialize.sh repo_metrics "SHORT PROJECT DESCRIPTION" "AUTHOR NAME" AUTHOR_EMAIL
-```
-I quoted the fields that are likely to contain spaces - this will be necessary.
-
-### Optional Changes
-You may also need to do the following:
-- Update the LICENSE file - it defaults to the BSD 3-Clause License.
-
-When you add development dependencies, add them to `dev-requirements.txt`.
-
-When you add testing dependencies, add them to `test-requirements.txt`.
-
-When you add runtime dependencies, add them to `setup.py` in the `install_requires` section.
-
-## General Notes
-
-When running `tox`, you'll notice that the linter runs before black8.  This is intentional.  Rather than have it blindly reformat your code, I wanted to make sure you knew what you were doing wrong (i.e. against PEP 8 standards).  You can configure this order to suit your needs.
-
-Notable projects already using this template are:
-- [Cromshell 2.0](https://github.com/broadinstitute/cromshell/tree/cromshell_2.0)
-- [CARROT CLI](https://github.com/broadinstitute/carrot_cli)
-
-Lastly, it's worth double-checking everything to make sure you want what's included here.
-
-Below this line begins the project-specific portion of the README that should be modified after creating a new project:
-
----
-
-# PROJECT\_NAME 
-\_SHORT\_PROJECT\_DESCRIPTION\_
+# Repo Metrics
+This is a tool for retrieving metrics for a project from a few different places (currently just GitHub and DockerHub, but more to come later).
 
 Current version: 0.0.1
 
 ## Installation
 
     pip install .
+
+## Usage
+
+Currently, the only command for the tool is `get`.  For example:
+
+    repo_metrics get -gh broadinstitute/gatk
+
+Running the command above will retrieve metrics from the GATK GitHub repo, and write a selection of them to stdout as JSON.
+
+### Sources
+
+Two sources of data are currently supported: GitHub and DockerHub.  It is possible to retrieve data from both in one command:
+
+    repo_metrics get -gh broadinstitute/gatk -dh broadinstitute/gatk
+
+When retrieving data for both, the keys for each value will be prefixed with the name of the source.
+
+#### Private GitHub repos
+
+It is possible to retrieve metrics from private GitHub repos by setting the `GITHUB_TOKEN` environment variable with a GitHub API token corresponding to an account that has access to that repo.
+
+### Output formats
+
+Two output are currently supported: JSON and CSV.  JSON is the default output format.  Output format is specified using the `-of` option:
+
+    repo_metrics get -gh broadinstitute/gatk -of csv -o output.csv
+
+You can also use the `-a` option with CSV output to append to the specified file.
+
+### Output config
+
+The GitHub and DockerHub APIs both provide a lot of information that you mostly probably don't want to record over and over again.  The tool provides functionality for filtering what values will actually be written to the output.  You can provide a custom config for what values to include using a JSON file like this:
+
+    repo_metrics get -gh broadinstitute/gatk -dh broadinstitute/gatk -c config.json
+
+where the contents of the config.json file are:
+
+    {
+        "github_fields": [
+            "forks",
+            "open_issues",
+            "watchers",
+            "stargazers_count",
+            "subscribers_count",
+            "download_count"
+        ],
+        "dockerhub_fields": [
+            "star_count",
+            "pull_count"
+        ]
+    }
+
+There are also two built-in configurations that can be used without a file.  The default (`just_metrics`) matches the configuration above.  The other option is `everything`, which will give you every field for every specified source.
+
+    repo_metrics get -gh broadinstitute/gatk -dh broadinstitute/gatk -c everything
+
+### Timestamps
+
+The tool can also include a timestamp in the output using the `-t` flag.  This will be prepended to the output with the key `date_and_time`.
 
 ## Development
 
