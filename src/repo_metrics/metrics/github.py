@@ -13,9 +13,9 @@ class GitHubMetricsHelper:
     """
 
     def __init__(self):
-        # Get the GitHub API token from the environment variable
+        # Get the GitHub API token from the environment variable (if there is one)
         token = Settings().get_github_token()
-        self.token = token
+        self.token: str | None = token
 
     def get_repo_info(self, owner: str, repo: str) -> dict:
         """
@@ -27,7 +27,10 @@ class GitHubMetricsHelper:
         :return: A dictionary containing the repository info
         """
         url = f'https://api.github.com/repos/{owner}/{repo}'
-        headers = {'Authorization':f'token {self.token}'}
+        if self.token:
+            headers = {'Authorization':f'token {self.token}'}
+        else:
+            headers = {}
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
             raise GitHubException(f"Failed to get info for {owner}/{repo}")
@@ -49,7 +52,10 @@ class GitHubMetricsHelper:
         :return: The download count
         """
         url = f'https://api.github.com/repos/{owner}/{repo}/releases'
-        headers = {'Authorization':f'token {self.token}'}
+        if self.token:
+            headers = {'Authorization':f'token {self.token}'}
+        else:
+            headers = {}
 
         # Paginate through the releases to get the download count
         page = 1

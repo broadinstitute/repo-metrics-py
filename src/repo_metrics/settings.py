@@ -12,7 +12,7 @@ class Settings:
         Initialize the settings
         """
         # Get the GitHub API token from the environment variable
-        self.github_token = os.getenv('GITHUB_TOKEN')
+        self.github_token: str | None = os.getenv('GITHUB_TOKEN')
 
     def get_github_token(self) -> str:
         """

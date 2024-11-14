@@ -53,6 +53,6 @@ class OutputConfig:
         with open(path, 'r') as f:
             data = json.load(f)
             return OutputConfig(
-                github_fields=data["github_fields"],
-                dockerhub_fields=data["dockerhub_fields"],
+                github_fields=data.get("github_fields", None),
+                dockerhub_fields=data.get("dockerhub_fields", None),
             )
