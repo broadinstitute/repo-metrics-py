@@ -2,11 +2,10 @@ import logging
 from sys import argv
 
 import click
+from dotenv import load_dotenv
 
 # porcelain
-from .sub_command_1 import command as sub_command_1
-from .sub_command_2 import command as sub_command_2
-from .sub_command_3 import command as sub_command_3
+from .get import command as get
 
 # Version number is automatically set via bumpversion.
 # DO NOT MODIFY:
@@ -16,7 +15,7 @@ __version__ = "0.0.1"
 LOGGER = logging.getLogger(__name__)
 
 
-@click.group(name="PROJECT_NAME")
+@click.group(name="repo_metrics")
 @click.option(
     "-q",
     "--quiet",
@@ -43,6 +42,8 @@ def main_entry(verbosity):
 
     log.configure_logging(verbosity)
 
+    load_dotenv()
+
     # Log our command-line and log level so we can have it in the log file:
     LOGGER.info("Invoked by: %s", " ".join(argv))
     LOGGER.info("Log level set to: %s", logging.getLevelName(logging.getLogger().level))
@@ -50,14 +51,12 @@ def main_entry(verbosity):
 
 @main_entry.command()
 def version():
-    """Print the version of PROJECT_NAME"""
-    LOGGER.info("PROJECT_NAME: %s", __version__)
+    """Print the version of repo_metrics"""
+    LOGGER.info("repo_metrics: %s", __version__)
 
 
 # Update with new sub-commands:
-main_entry.add_command(sub_command_1.main)
-main_entry.add_command(sub_command_2.main)
-main_entry.add_command(sub_command_3.main)
+main_entry.add_command(get.main)
 
 
 if __name__ == "__main__":
