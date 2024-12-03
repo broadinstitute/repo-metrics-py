@@ -1,8 +1,8 @@
 import csv
+from enum import Enum
 
 from .output_type import Output
 from .preprocess import flatten
-
 
 class CsvOutput(Output):
 
@@ -11,7 +11,7 @@ class CsvOutput(Output):
         Constructor for the CsvOutput class
 
         :param path: The path to the file to write
-        :param append: Whether to append to the file
+        :param mode: Mode for writing to the file
         """
         self.path = path
         self.append = append
@@ -22,13 +22,25 @@ class CsvOutput(Output):
 
         :param data: The data to print
         """
-        open_mode = "a" if self.append else "w"
+        data_to_write = []
+        # If the mode is append, read the existing file and append to it
+        if self.append:
+            with open(self.path, "r") as f:
+                reader = csv.DictReader(f)
+                data_to_write.extend(reader)
 
         # Flatten the data so it writes correctly
         data = flatten(data)
+        data_to_write.append(data)
 
-        with open(self.path, open_mode) as f:
-            writer = csv.DictWriter(f, fieldnames=data.keys())
-            if not self.append:
-                writer.writeheader()
-            writer.writerow(data)
+        # Make sure we have all the field names from both the existing data (if we have any) and the new data
+        fieldnames_set = set(data.keys())
+        fieldnames_set.update(data_to_write[0].keys() if data_to_write else [])
+        fieldnames_list = list(fieldnames_set)
+        fieldnames_list.sort()
+
+        with open(self.path, 'w') as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames_list)
+            writer.writeheader()
+            for row in data_to_write:
+                writer.writerow(row)

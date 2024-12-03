@@ -41,7 +41,7 @@ def test_merge_without_labels():
 
 def test_merge_with_labels():
     data = [{"name": "test1", "value": 123}, {"name": "test2", "value": 456}]
-    labels = ["first", "second"]
+    labels = ["first_", "second_"]
     result = merge(data, labels)
     expected = {"first_name": "test1", "first_value": 123, "second_name": "test2", "second_value": 456}
     assert result == expected
