@@ -1,5 +1,5 @@
 import csv
-from enum import Enum
+import os
 
 from .output_type import Output
 from .preprocess import flatten
@@ -22,25 +22,52 @@ class CsvOutput(Output):
 
         :param data: The data to print
         """
-        data_to_write = []
-        # If the mode is append, read the existing file and append to it
-        if self.append:
-            with open(self.path, "r") as f:
-                reader = csv.DictReader(f)
-                data_to_write.extend(reader)
-
-        # Flatten the data so it writes correctly
         data = flatten(data)
-        data_to_write.append(data)
+        fieldnames_set = set()
 
-        # Make sure we have all the field names from both the existing data (if we have any) and the new data
-        fieldnames_set = set(data.keys())
-        fieldnames_set.update(data_to_write[0].keys() if data_to_write else [])
-        fieldnames_list = list(fieldnames_set)
-        fieldnames_list.sort()
+        # Rewrite the file if the header is different
+        rewrite = False
 
-        with open(self.path, 'w') as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames_list)
-            writer.writeheader()
-            for row in data_to_write:
-                writer.writerow(row)
+        # Read existing fieldnames if appending
+        if self.append:
+            try:
+                with open(self.path, "r") as f:
+                    # Check if the header is different
+                    reader = csv.DictReader(f)
+                    existing_fieldnames = reader.fieldnames
+                    if existing_fieldnames is not None:
+                        if set(existing_fieldnames) != fieldnames_set:
+                            rewrite = True
+                    # Add existing fieldnames to the set
+                    fieldnames_set.update(existing_fieldnames)
+            except FileNotFoundError:
+                pass
+
+        # Add new fieldnames to the set
+        fieldnames_set.update(data.keys())
+        fieldnames_list = sorted(fieldnames_set)
+
+        # If we have to rewrite the file, read from the existing file and write to a temporary file
+        if rewrite:
+            with open(self.path, "r") as f:
+                with open(self.path + ".tmp", "w", newline="") as f_tmp:
+                    reader = csv.DictReader(f)
+                    writer = csv.DictWriter(f_tmp, fieldnames=fieldnames_list, restval="", extrasaction="ignore")
+                    writer.writeheader()
+                    # Write the existing rows to the temporary file
+                    for row in reader:
+                        #row.update((k, "") for k in fieldnames_list if k not in row)
+                        writer.writerow(row)
+                    # Write the new data to the temporary file
+                    writer.writerow(data)
+            # Replace the existing file with the temporary file
+            os.replace(self.path + ".tmp", self.path)
+        # Otherwise, just write the data to the file
+        else:
+            with open(self.path, "a" if self.append else "w", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames_list)
+                if not self.append:
+                    writer.writeheader()
+                writer.writerow(data)
+
+
