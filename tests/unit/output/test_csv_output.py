@@ -37,6 +37,7 @@ def test_append_to_file(temp_file):
         assert rows[0] == data1
         assert rows[1] == data2
 
+
 def test_append_with_different_fields(temp_file):
     data1 = {"name": "test1", "value": "123"}
     data2 = {"name": "test2", "extra_field": "456"}

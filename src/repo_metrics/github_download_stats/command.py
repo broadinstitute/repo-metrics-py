@@ -8,9 +8,10 @@ from datetime import datetime
 import click
 
 from repo_metrics.metrics import GitHubMetricsHelper
-from repo_metrics.output import CsvOutput, JsonOutput, Output, OutputConfig, OutputType, preprocess
+from repo_metrics.output import CsvOutput, JsonOutput, Output, OutputType, preprocess
 
 LOGGER = logging.getLogger(__name__)
+
 
 @click.command(name="github_download_stats")
 @click.option(

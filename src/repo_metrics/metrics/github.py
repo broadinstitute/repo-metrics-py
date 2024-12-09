@@ -46,7 +46,7 @@ class GitHubMetricsHelper:
         data["download_count"] = download_count
 
         return data
-    
+
     def get_release_download_counts(self, owner: str, repo: str) -> dict:
         """
         Get download counts for all releases in the specified git repository

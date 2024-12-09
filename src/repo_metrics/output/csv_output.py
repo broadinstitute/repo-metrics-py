@@ -4,6 +4,7 @@ import os
 from .output_type import Output
 from .preprocess import flatten
 
+
 class CsvOutput(Output):
 
     def __init__(self, path, append=False):
@@ -56,7 +57,7 @@ class CsvOutput(Output):
                     writer.writeheader()
                     # Write the existing rows to the temporary file
                     for row in reader:
-                        #row.update((k, "") for k in fieldnames_list if k not in row)
+                        # row.update((k, "") for k in fieldnames_list if k not in row)
                         writer.writerow(row)
                     # Write the new data to the temporary file
                     writer.writerow(data)
@@ -69,5 +70,3 @@ class CsvOutput(Output):
                 if not self.append:
                     writer.writeheader()
                 writer.writerow(data)
-
-

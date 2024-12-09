@@ -96,10 +96,13 @@ def test_get_release_download_counts_success(github_helper):
 
     mockito.when(requests).get(releases_url, headers=headers, params={"page": 1, "per_page": 100}).thenReturn(
         mockito.mock(
-            {"status_code": 200, "json": lambda: [
-                {"tag_name": "v1.0", "assets": [{"download_count": 10}, {"download_count": 20}]},
-                {"tag_name": "v1.1", "assets": [{"download_count": 5}]}
-            ]}
+            {
+                "status_code": 200,
+                "json": lambda: [
+                    {"tag_name": "v1.0", "assets": [{"download_count": 10}, {"download_count": 20}]},
+                    {"tag_name": "v1.1", "assets": [{"download_count": 5}]},
+                ],
+            }
         )
     )
     mockito.when(requests).get(releases_url, headers=headers, params={"page": 2, "per_page": 100}).thenReturn(
