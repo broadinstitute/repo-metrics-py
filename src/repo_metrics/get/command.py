@@ -1,3 +1,7 @@
+"""
+Defines a command for getting top-level metrics for a repository
+"""
+
 import logging
 from datetime import datetime
 
@@ -74,7 +78,7 @@ def main(github_repo, dockerhub_repo, output, output_format, append, include_tim
     # Include the timestamp if set, with some clever labelling so I don't need to special case it
     if include_timestamp:
         data_to_print.append({"time": datetime.now().isoformat()})
-        data_to_print_labels.append("date_and")
+        data_to_print_labels.append("date_and_")
 
     if github_repo:
         owner, repo = github_repo.split("/")
@@ -84,7 +88,7 @@ def main(github_repo, dockerhub_repo, output, output_format, append, include_tim
         if config.github_fields:
             github_data = preprocess.filter(github_data, config.github_fields)
         data_to_print.append(github_data)
-        data_to_print_labels.append("github")
+        data_to_print_labels.append("github_")
 
     if dockerhub_repo:
         owner, repo = dockerhub_repo.split("/")
@@ -94,7 +98,7 @@ def main(github_repo, dockerhub_repo, output, output_format, append, include_tim
         if config.dockerhub_fields:
             dockerhub_data = preprocess.filter(dockerhub_data, config.dockerhub_fields)
         data_to_print.append(dockerhub_data)
-        data_to_print_labels.append("dockerhub")
+        data_to_print_labels.append("dockerhub_")
 
     repo_info = preprocess.merge(data_to_print, data_to_print_labels)
 

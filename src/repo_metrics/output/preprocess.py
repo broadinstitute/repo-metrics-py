@@ -33,7 +33,7 @@ def merge(data: List[dict], labels: List[str] | None) -> dict:
     for i, data_dict in enumerate(data):
         for key, value in data_dict.items():
             if labels:
-                merged_data[f"{labels[i]}_{key}"] = value
+                merged_data[f"{labels[i]}{key}"] = value
             else:
                 merged_data[key] = value
     return merged_data

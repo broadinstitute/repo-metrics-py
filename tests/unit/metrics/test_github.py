@@ -86,3 +86,43 @@ def test_get_download_count_failure(github_helper):
 
     with pytest.raises(GitHubException):
         github_helper._GitHubMetricsHelper__get_download_count(owner, repo)
+
+
+def test_get_release_download_counts_success(github_helper):
+    owner = "test_owner"
+    repo = "test_repo"
+    releases_url = f"https://api.github.com/repos/{owner}/{repo}/releases"
+    headers = {"Authorization": "token test_token"}
+
+    mockito.when(requests).get(releases_url, headers=headers, params={"page": 1, "per_page": 100}).thenReturn(
+        mockito.mock(
+            {
+                "status_code": 200,
+                "json": lambda: [
+                    {"tag_name": "v1.0", "assets": [{"download_count": 10}, {"download_count": 20}]},
+                    {"tag_name": "v1.1", "assets": [{"download_count": 5}]},
+                ],
+            }
+        )
+    )
+    mockito.when(requests).get(releases_url, headers=headers, params={"page": 2, "per_page": 100}).thenReturn(
+        mockito.mock({"status_code": 200, "json": lambda: []})
+    )
+
+    release_download_counts = github_helper.get_release_download_counts(owner, repo)
+
+    assert release_download_counts == {"v1.0": 30, "v1.1": 5}
+
+
+def test_get_release_download_counts_failure(github_helper):
+    owner = "test_owner"
+    repo = "test_repo"
+    releases_url = f"https://api.github.com/repos/{owner}/{repo}/releases"
+    headers = {"Authorization": "token test_token"}
+
+    mockito.when(requests).get(releases_url, headers=headers, params={"page": 1, "per_page": 100}).thenReturn(
+        mockito.mock({"status_code": 404})
+    )
+
+    with pytest.raises(GitHubException):
+        github_helper.get_release_download_counts(owner, repo)
