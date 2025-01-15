@@ -11,7 +11,7 @@ def temp_file(tmpdir):
 
 
 def test_write_new_file(temp_file):
-    data = {"name": "test", "value": "123"}
+    data = [{"name": "test", "value": "123"}]
     csv_output = CsvOutput(str(temp_file))
     csv_output.write(data)
 
@@ -19,12 +19,12 @@ def test_write_new_file(temp_file):
         reader = csv.DictReader(f)
         rows = list(reader)
         assert len(rows) == 1
-        assert rows[0] == data
+        assert rows[0] == data[0]
 
 
 def test_append_to_file(temp_file):
-    data1 = {"name": "test1", "value": "123"}
-    data2 = {"name": "test2", "value": "456"}
+    data1 = [{"name": "test1", "value": "123"}]
+    data2 = [{"name": "test2", "value": "456"}]
     csv_output = CsvOutput(str(temp_file))
     csv_output.write(data1)
     csv_output = CsvOutput(str(temp_file), append=True)
@@ -34,13 +34,13 @@ def test_append_to_file(temp_file):
         reader = csv.DictReader(f)
         rows = list(reader)
         assert len(rows) == 2
-        assert rows[0] == data1
-        assert rows[1] == data2
+        assert rows[0] == data1[0]
+        assert rows[1] == data2[0]
 
 
 def test_append_with_different_fields(temp_file):
-    data1 = {"name": "test1", "value": "123"}
-    data2 = {"name": "test2", "extra_field": "456"}
+    data1 = [{"name": "test1", "value": "123"}]
+    data2 = [{"name": "test2", "extra_field": "456"}]
     csv_output = CsvOutput(str(temp_file))
     csv_output.write(data1)
     csv_output = CsvOutput(str(temp_file), append=True)

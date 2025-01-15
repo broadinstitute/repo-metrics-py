@@ -17,6 +17,7 @@ setup(
     click
     requests
     python-dotenv
+    pyjwt
     """.split(
         "\n"
     ),

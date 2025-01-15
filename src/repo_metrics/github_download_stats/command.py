@@ -79,6 +79,6 @@ def main(
     if output_format == "csv":
         output_writer = CsvOutput(output, append)
     else:
-        output_writer = JsonOutput(output)
+        output_writer = JsonOutput(output, append)
 
-    output_writer.write(output_data)
+    output_writer.write([output_data])

@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 # porcelain
 from .get import command as get
 from .github_download_stats import command as github_download_stats
+from .github_traffic_stats import command as github_traffic_stats
 
 # Version number is automatically set via bumpversion.
 # DO NOT MODIFY:
@@ -59,6 +60,7 @@ def version():
 # Update with new sub-commands:
 main_entry.add_command(get.main)
 main_entry.add_command(github_download_stats.main)
+main_entry.add_command(github_traffic_stats.main)
 
 
 if __name__ == "__main__":
