@@ -17,13 +17,18 @@ class CsvOutput(Output):
         self.path = path
         self.append = append
 
-    def write(self, data: dict) -> None:
+    def write(self, data: list[dict]) -> None:
         """
         Prints the specified data in CSV format
 
         :param data: The data to print
         """
-        data = flatten(data)
+        # Flatten the data
+        flattened_data = []
+        for d in data:
+            flattened_data.append(flatten(d))
+        data = flattened_data
+
         fieldnames_set = set()
 
         # Rewrite the file if the header is different
@@ -45,7 +50,8 @@ class CsvOutput(Output):
                 pass
 
         # Add new fieldnames to the set
-        fieldnames_set.update(data.keys())
+        for d in data:
+            fieldnames_set.update(d.keys())
         fieldnames_list = sorted(fieldnames_set)
 
         # If we have to rewrite the file, read from the existing file and write to a temporary file
@@ -60,7 +66,8 @@ class CsvOutput(Output):
                         # row.update((k, "") for k in fieldnames_list if k not in row)
                         writer.writerow(row)
                     # Write the new data to the temporary file
-                    writer.writerow(data)
+                    for d in data:
+                        writer.writerow(d)
             # Replace the existing file with the temporary file
             os.replace(self.path + ".tmp", self.path)
         # Otherwise, just write the data to the file
@@ -69,4 +76,5 @@ class CsvOutput(Output):
                 writer = csv.DictWriter(f, fieldnames=fieldnames_list)
                 if not self.append:
                     writer.writeheader()
-                writer.writerow(data)
+                for d in data:
+                    writer.writerow(d)

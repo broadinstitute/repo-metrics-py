@@ -106,6 +106,6 @@ def main(github_repo, dockerhub_repo, output, output_format, append, include_tim
     if output_format == "csv":
         output_writer = CsvOutput(output, append)
     else:
-        output_writer = JsonOutput(output)
+        output_writer = JsonOutput(output, append)
 
-    output_writer.write(repo_info)
+    output_writer.write([repo_info])
