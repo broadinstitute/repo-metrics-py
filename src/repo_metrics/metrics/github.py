@@ -228,10 +228,7 @@ class GitHubMetricsHelper:
         :raises GitHubException: If the request fails
         """
         url = f"https://api.github.com/repos/{owner}/{repo}/installation"
-        if self.token:
-            headers = {"Authorization": f"Bearer {jwt}"}
-        else:
-            headers = {}
+        headers = {"Authorization": f"Bearer {jwt}"}
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
             raise GitHubException(f"Failed to get installation ID for {owner}/{repo}. Response: {response.text}")
@@ -251,10 +248,7 @@ class GitHubMetricsHelper:
         :raises GitHubException: If the request fails
         """
         url = f"https://api.github.com/app/installations/{installation_id}/access_tokens"
-        if self.token:
-            headers = {"Authorization": f"Bearer {jwt}"}
-        else:
-            headers = {}
+        headers = {"Authorization": f"Bearer {jwt}"}
         response = requests.post(url, headers=headers)
         if response.status_code != 201:
             raise GitHubException(
