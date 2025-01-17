@@ -130,7 +130,9 @@ class GitHubMetricsHelper:
 
         return download_count
 
-    def get_repo_traffic(self, owner: str, repo: str, only_yesterday: bool = False) -> list[dict]:
+    def get_repo_traffic(
+        self, owner: str, repo: str, only_yesterday: bool = False, exclude_today: bool = True
+    ) -> list[dict]:
         """
         Get the traffic data for the specified git repository
 
@@ -165,7 +167,16 @@ class GitHubMetricsHelper:
                 traffic_data[timestamp]["unique views"] = view["uniques"]
             else:
                 traffic_data[timestamp] = {"views": view["count"], "unique views": view["uniques"]}
-
+        # Filter out today's data if exclude_today is True
+        if exclude_today:
+            # Get a timestamp for today at midnight so we can check for it in the traffic data
+            today = datetime.datetime.now(datetime.timezone.utc)
+            midnight = datetime.datetime.combine(today, datetime.time.min)
+            today_formatted = midnight.strftime("%Y-%m-%dT%H:%M:%SZ")
+            # Check if the traffic data contains data for today
+            if today_formatted in traffic_data:
+                del traffic_data[today_formatted]
+        # Filter out all the data except for yesterday if only_yesterday is True
         if only_yesterday:
             # Get a timestamp for yesterday at midnight so we can check for it in the traffic data
             today = datetime.datetime.now(datetime.timezone.utc)
