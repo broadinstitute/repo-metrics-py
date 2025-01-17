@@ -28,7 +28,7 @@ class CsvOutput(Output):
         for d in data:
             flattened_data.append(flatten(d))
         data = flattened_data
-        
+
         fieldnames_set = set()
 
         # Rewrite the file if the header is different

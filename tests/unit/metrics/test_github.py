@@ -142,12 +142,24 @@ def test_get_repo_traffic_success(github_helper):
 
     mockito.when(github_helper)._GitHubMetricsHelper__create_github_app_jwt().thenReturn(jwt)
     mockito.when(github_helper)._GitHubMetricsHelper__get_installation_id(owner, repo, jwt).thenReturn(installation_id)
-    mockito.when(github_helper)._GitHubMetricsHelper__get_installation_access_token(installation_id, jwt).thenReturn(token)
+    mockito.when(github_helper)._GitHubMetricsHelper__get_installation_access_token(installation_id, jwt).thenReturn(
+        token
+    )
     mockito.when(requests).get(clones_url, headers=headers).thenReturn(
-        mockito.mock({"status_code": 200, "json": lambda: {"clones": [{"timestamp": "2023-10-01T00:00:00Z", "count": 10, "uniques": 5}]}})
+        mockito.mock(
+            {
+                "status_code": 200,
+                "json": lambda: {"clones": [{"timestamp": "2023-10-01T00:00:00Z", "count": 10, "uniques": 5}]},
+            }
+        )
     )
     mockito.when(requests).get(views_url, headers=headers).thenReturn(
-        mockito.mock({"status_code": 200, "json": lambda: {"views": [{"timestamp": "2023-10-01T00:00:00Z", "count": 20, "uniques": 10}]}})
+        mockito.mock(
+            {
+                "status_code": 200,
+                "json": lambda: {"views": [{"timestamp": "2023-10-01T00:00:00Z", "count": 20, "uniques": 10}]},
+            }
+        )
     )
 
     traffic_data = github_helper.get_repo_traffic(owner, repo)
@@ -158,6 +170,7 @@ def test_get_repo_traffic_success(github_helper):
     assert traffic_data[0]["unique clones"] == 5
     assert traffic_data[0]["views"] == 20
     assert traffic_data[0]["unique views"] == 10
+
 
 def test_get_repo_traffic_only_yesterday_success(github_helper):
     owner = "test_owner"
@@ -171,7 +184,9 @@ def test_get_repo_traffic_only_yesterday_success(github_helper):
 
     mockito.when(github_helper)._GitHubMetricsHelper__create_github_app_jwt().thenReturn(jwt)
     mockito.when(github_helper)._GitHubMetricsHelper__get_installation_id(owner, repo, jwt).thenReturn(installation_id)
-    mockito.when(github_helper)._GitHubMetricsHelper__get_installation_access_token(installation_id, jwt).thenReturn(token)
+    mockito.when(github_helper)._GitHubMetricsHelper__get_installation_access_token(installation_id, jwt).thenReturn(
+        token
+    )
 
     # Get yesterday's date
     today = datetime.datetime.now(datetime.timezone.utc)
@@ -179,10 +194,20 @@ def test_get_repo_traffic_only_yesterday_success(github_helper):
     yesterday = midnight - datetime.timedelta(days=1)
     yesterday_formatted = yesterday.strftime("%Y-%m-%dT%H:%M:%SZ")
     mockito.when(requests).get(clones_url, headers=headers).thenReturn(
-        mockito.mock({"status_code": 200, "json": lambda: {"clones": [{"timestamp": yesterday_formatted, "count": 10, "uniques": 5}]}})
+        mockito.mock(
+            {
+                "status_code": 200,
+                "json": lambda: {"clones": [{"timestamp": yesterday_formatted, "count": 10, "uniques": 5}]},
+            }
+        )
     )
     mockito.when(requests).get(views_url, headers=headers).thenReturn(
-        mockito.mock({"status_code": 200, "json": lambda: {"views": [{"timestamp": yesterday_formatted, "count": 20, "uniques": 10}]}})
+        mockito.mock(
+            {
+                "status_code": 200,
+                "json": lambda: {"views": [{"timestamp": yesterday_formatted, "count": 20, "uniques": 10}]},
+            }
+        )
     )
 
     traffic_data = github_helper.get_repo_traffic(owner, repo, only_yesterday=True)
@@ -193,6 +218,7 @@ def test_get_repo_traffic_only_yesterday_success(github_helper):
     assert traffic_data[0]["unique clones"] == 5
     assert traffic_data[0]["views"] == 20
     assert traffic_data[0]["unique views"] == 10
+
 
 def test_get_repo_traffic_only_yesterday_failure(github_helper):
     owner = "test_owner"
@@ -206,15 +232,25 @@ def test_get_repo_traffic_only_yesterday_failure(github_helper):
 
     mockito.when(github_helper)._GitHubMetricsHelper__create_github_app_jwt().thenReturn(jwt)
     mockito.when(github_helper)._GitHubMetricsHelper__get_installation_id(owner, repo, jwt).thenReturn(installation_id)
-    mockito.when(github_helper)._GitHubMetricsHelper__get_installation_access_token(installation_id, jwt).thenReturn(token)
+    mockito.when(github_helper)._GitHubMetricsHelper__get_installation_access_token(installation_id, jwt).thenReturn(
+        token
+    )
     mockito.when(requests).get(clones_url, headers=headers).thenReturn(
-        mockito.mock({"status_code": 200, "json": lambda: {"clones": [{"timestamp": "2023-09-30T00:00:00Z", "count": 10, "uniques": 5}]}})
+        mockito.mock(
+            {
+                "status_code": 200,
+                "json": lambda: {"clones": [{"timestamp": "2023-09-30T00:00:00Z", "count": 10, "uniques": 5}]},
+            }
+        )
     )
     mockito.when(requests).get(views_url, headers=headers).thenReturn(
-        mockito.mock({"status_code": 200, "json": lambda: {"views": [{"timestamp": "2023-09-30T00:00:00Z", "count": 20, "uniques": 10}]}})
+        mockito.mock(
+            {
+                "status_code": 200,
+                "json": lambda: {"views": [{"timestamp": "2023-09-30T00:00:00Z", "count": 20, "uniques": 10}]},
+            }
+        )
     )
 
     with pytest.raises(GitHubException):
         github_helper.get_repo_traffic(owner, repo, only_yesterday=True)
-
-

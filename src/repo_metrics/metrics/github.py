@@ -129,7 +129,7 @@ class GitHubMetricsHelper:
             page += 1
 
         return download_count
-    
+
     def get_repo_traffic(self, owner: str, repo: str, only_yesterday: bool = False) -> list[dict]:
         """
         Get the traffic data for the specified git repository
@@ -165,7 +165,7 @@ class GitHubMetricsHelper:
                 traffic_data[timestamp]["unique views"] = view["uniques"]
             else:
                 traffic_data[timestamp] = {"views": view["count"], "unique views": view["uniques"]}
-        
+
         if only_yesterday:
             # Get a timestamp for yesterday at midnight so we can check for it in the traffic data
             today = datetime.datetime.now(datetime.timezone.utc)
@@ -180,10 +180,8 @@ class GitHubMetricsHelper:
 
         # Format the traffic data so it's a list of objects
         traffic_data = [{"timestamp": timestamp, **data} for timestamp, data in traffic_data.items()]
-            
-        return traffic_data
 
-        
+        return traffic_data
 
     def __create_github_app_jwt(self):
         """
@@ -194,19 +192,18 @@ class GitHubMetricsHelper:
 
         if not client_id or not private_key:
             raise GitHubException("GitHub App client ID or private key not found")
-        
+
         payload = {
             # Issued at time
-            'iat': int(time.time()),
+            "iat": int(time.time()),
             # JWT expiration time (10 minutes maximum)
-            'exp': int(time.time()) + 600,
-            
+            "exp": int(time.time()) + 600,
             # GitHub App's client ID
-            'iss': client_id
+            "iss": client_id,
         }
 
-        return jwt.encode(payload, private_key, algorithm='RS256')
-    
+        return jwt.encode(payload, private_key, algorithm="RS256")
+
     def __get_installation_id(self, owner, repo, jwt):
         """
         Get the installation ID for the app installation on the specified repo
@@ -230,7 +227,7 @@ class GitHubMetricsHelper:
         data = response.json()
 
         return data["id"]
-    
+
     def __get_installation_access_token(self, installation_id, jwt):
         """
         Get an installation access token for the specified app installation
@@ -249,11 +246,13 @@ class GitHubMetricsHelper:
             headers = {}
         response = requests.post(url, headers=headers)
         if response.status_code != 201:
-            raise GitHubException(f"Failed to get installation access token for {installation_id}. Response: {response.text}")
+            raise GitHubException(
+                f"Failed to get installation access token for {installation_id}. Response: {response.text}"
+            )
         data = response.json()
 
         return data["token"]
-    
+
     def __get_traffic_clones(self, owner: str, repo: str, token: str) -> dict:
         """
         Get the traffic clones for the specified git repository
@@ -274,7 +273,7 @@ class GitHubMetricsHelper:
         data = response.json()
 
         return data
-    
+
     def __get_traffic_views(self, owner: str, repo: str, token: str) -> dict:
         """
         Get the traffic views for the specified git repository
@@ -295,4 +294,3 @@ class GitHubMetricsHelper:
         data = response.json()
 
         return data
-

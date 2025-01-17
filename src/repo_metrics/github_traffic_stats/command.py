@@ -11,6 +11,7 @@ from repo_metrics.output import CsvOutput, JsonOutput, Output
 
 LOGGER = logging.getLogger(__name__)
 
+
 @click.command(name="github_traffic_stats")
 @click.option(
     "--github-repo",

@@ -31,7 +31,7 @@ class Settings:
         :return: The GitHub API token
         """
         return self.github_token
-    
+
     def get_github_app_client_id(self) -> str:
         """
         Get the GitHub App client ID, needed for API calls made as a GitHub App (since some API
@@ -40,7 +40,7 @@ class Settings:
         :return: The GitHub App client ID
         """
         return self.github_app_client_id
-    
+
     def get_github_app_private_key(self) -> str:
         """
         Get the path to the private key, needed for API calls made as a GitHub App (since some API
