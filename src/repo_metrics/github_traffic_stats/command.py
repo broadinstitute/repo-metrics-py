@@ -42,7 +42,7 @@ LOGGER = logging.getLogger(__name__)
 )
 @click.option(
     "--only-yesterday",
-    "-omr",
+    "-oy",
     is_flag=True,
     help="Only include the data for yesterday (by default includes all available data for the last 14 days)",
 )
